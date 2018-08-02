@@ -23,9 +23,9 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private TextView tv_newUser,tv_test;
+    private TextView tv_newUser;
     private LinearLayout linear;
-    private  ProgressBar bar;
+    private ProgressDialog dialog;
     private EditText username,userpassword;
     private Button btn_login;
     public static ApiInterface apiInterface;
@@ -41,24 +41,49 @@ public class LoginActivity extends AppCompatActivity {
 
         username = findViewById(R.id.ed_login_username);
         userpassword = findViewById(R.id.ed_login_password);
-        tv_test = findViewById(R.id.tv_test);
-        linear = findViewById(R.id.linear1);
 
-        Bitmap blur = GaussianBlur.with(getApplicationContext()).render(R.drawable.ic_bg);
-        Drawable drawable = new BitmapDrawable(getResources(),blur);
-
-        linear.setBackground(drawable);
-
+        dialog = new ProgressDialog(this);
+        dialog.setTitle("Please wait");
+        dialog.setMessage("Logging you in...");
+        dialog.setCancelable(false);
 
         btn_login = findViewById(R.id.btn_login);
-        bar = findViewById(R.id.progressBar);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                bar.setVisibility(View.VISIBLE);
+                validate();
+                dialog.show();
                 performLogin();
+            }
+
+            private void validate() {
+
+//                if (username.getText().toString().trim().length() <= 0){
+//
+//                    username.setError("Enter Username");
+//                    return;
+//                }
+//
+//                else if (userpassword.getText().toString().trim().length() <= 0){
+//
+//                    userpassword.setError("Enter Password");
+//                    return;
+//                }
+                boolean errorOccured = false;
+                if (username.getText().toString().trim().equals(""))
+                {
+                    username.setError("Enter Username");
+                    errorOccured = true;
+                }
+                if (userpassword.getText().toString().trim().equals(""))
+                {
+                    userpassword.setError("Enter Password");
+                    errorOccured = true;
+                }
+                if(errorOccured){return;}
+
             }
         });
 
@@ -79,13 +104,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void performLogin() {
 
-        String uname = username.getText().toString().trim();
-        String pass = userpassword.getText().toString().trim();
+        final String uname = username.getText().toString().trim();
+        final String pass = userpassword.getText().toString().trim();
 
-        Log.d("Login Activity", "userpassword "+pass);
-
+        //Log.d("Login Activity", "userpassword "+
 
         Call<UserModelCLass> call = apiInterface.performLogin(uname,pass);
 
@@ -93,17 +119,18 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<UserModelCLass> call, Response<UserModelCLass> response) {
 
-                if (response.body().getResponse().equals("ok"))
+                if (response.body().getResponse() != null && response.body().getResponse().equals("ok"))
                 {
                     prefConfig.displayToast("Login Successfull...!!!");
 
-                    bar.setVisibility(View.GONE);
-                    Intent i = new Intent(getApplicationContext(),WelcomeScreen.class);
+                    dialog.dismiss();
+                    Intent i = new Intent(getApplicationContext(),UserProfileActivity.class);
+                    i.putExtra("username",uname);
                     startActivity(i);
                 }
-                else if (response.body().getResponse().equals("error"))
+                else if (response.body().getResponse() != null && response.body().getResponse().equals("error"))
                 {
-                    bar.setVisibility(View.GONE);
+                    dialog.dismiss();
                     prefConfig.displayToast("Wrong Username or Password..!!!");
                 }
             }
@@ -111,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<UserModelCLass> call, Throwable t) {
 
-                bar.setVisibility(View.GONE);
+                dialog.dismiss();
                 prefConfig.displayToast("Server Error..!!!");
 
             }
