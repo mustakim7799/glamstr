@@ -1,71 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2323"
-    android:id="@+id/relative_layout"
+    android:background="#fff"
+    android:id="@+id/constraint_expanded"
     tools:context=".UserProfileActivity">
 
-    <RelativeLayout
-        android:id="@+id/inner_relative"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:orientation="vertical"
-        android:background="#2d2d2d">
+        android:layout_height="200dp">
 
-        <ImageView
-            android:id="@+id/imgView_cover"
+        <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_default_user" />
+            app:layout_scrollFlags="exitUntilCollapsed|scroll"
+            app:contentScrim="?attr/colorPrimary"
+            app:title="Collapsing ToolBar Example"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp"
+            android:background="@mipmap/ic_launcher">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imgView_profile"
-            android:layout_width="112dp"
-            android:layout_height="112dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/ic_default_user"/>
+            <android.support.v7.widget.Toolbar
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:id="@+id/toolbar"
+                app:layout_collapseMode="pin"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"/>
 
-        <TextView
-            android:id="@+id/tv_displayName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Mustakim Khalifa"
-            android:gravity="center"
-            android:textStyle="bold|italic"
-            android:textColor="#000"
-            android:textSize="30sp"
-            android:layout_below="@+id/imgView_profile"/>
+        </android.support.design.widget.CollapsingToolbarLayout>
 
-    </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <ImageView
+        android:id="@+id/imgView_cover"
+        android:layout_width="0dp"
+        android:layout_height="207dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgView_profile"
+        android:layout_width="112dp"
+        android:layout_height="112dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_glamstr_logo"
+        app:layout_constraintBottom_toBottomOf="@+id/imgView_cover"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgView_cover"
+        app:layout_constraintVertical_bias="0.458" />
 
     <ImageView
         android:id="@+id/imgView_divider"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@+id/inner_relative"
-        android:src="@drawable/ic_divider" />
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgView_profile" />
 
 
     <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:fitsSystemWindows="true"
         android:padding="5dp"
+        android:id="@+id/scroll"
         android:scrollbars="none"
-        android:layout_below="@+id/imgView_divider">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgView_divider">
 
         <LinearLayout
-            android:id="@+id/linear1"
+            android:id="@+id/linear"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@+id/scroll"
+            android:layout_height="0dp">
 
             <TextView
                 android:id="@+id/tv_name"
@@ -243,10 +265,14 @@
                 android:padding="12dp"
                 android:layout_margin="12dp"/>
 
+
+
+
+
         </LinearLayout>
 
 
     </ScrollView>
 
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

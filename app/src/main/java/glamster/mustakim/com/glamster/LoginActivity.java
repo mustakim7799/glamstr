@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_login;
     public static ApiInterface apiInterface;
     public static PrefConfig prefConfig;
+    private String uname,pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         dialog = new ProgressDialog(this);
         dialog.setTitle("Please wait");
         dialog.setMessage("Logging you in...");
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
 
         btn_login = findViewById(R.id.btn_login);
 
@@ -53,42 +54,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                validate();
-                dialog.show();
-                performLogin();
-            }
-
-            private void validate() {
-
-//                if (username.getText().toString().trim().length() <= 0){
-//
-//                    username.setError("Enter Username");
-//                    return;
-//                }
-//
-//                else if (userpassword.getText().toString().trim().length() <= 0){
-//
-//                    userpassword.setError("Enter Password");
-//                    return;
-//                }
-                boolean errorOccured = false;
-                if (username.getText().toString().trim().equals(""))
-                {
-                    username.setError("Enter Username");
-                    errorOccured = true;
-                }
-                if (userpassword.getText().toString().trim().equals(""))
-                {
-                    userpassword.setError("Enter Password");
-                    errorOccured = true;
-                }
-                if(errorOccured){return;}
+               // dialog.show();
+                performValidation();
 
             }
+
         });
-
-
-
 
         tv_newUser = findViewById(R.id.tv_newUser);
 
@@ -104,34 +75,54 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void performValidation() {
+
+        final String getUname = username.getText().toString().trim();
+        final String getPass = userpassword.getText().toString().trim();
+
+        if (getUname.equalsIgnoreCase("") && getUname.length() <= 5)
+        {
+            username.setError("Input Username");
+            return;
+        }
+        else if (getPass.equalsIgnoreCase("") && getPass.length() <= 5)
+        {
+            userpassword.setError("Input password");
+            return;
+        }
+        else{
+            performLogin();
+        }
+    }
 
 
     private void performLogin() {
 
-        final String uname = username.getText().toString().trim();
-        final String pass = userpassword.getText().toString().trim();
+        uname = username.getText().toString().trim();
+        pass = userpassword.getText().toString().trim();
 
         //Log.d("Login Activity", "userpassword "+
 
+        dialog.show();
         Call<UserModelCLass> call = apiInterface.performLogin(uname,pass);
 
         call.enqueue(new Callback<UserModelCLass>() {
             @Override
             public void onResponse(Call<UserModelCLass> call, Response<UserModelCLass> response) {
-
+                dialog.dismiss();
                 if (response.body().getResponse() != null && response.body().getResponse().equals("ok"))
                 {
                     prefConfig.displayToast("Login Successfull...!!!");
 
-                    dialog.dismiss();
+                   // dialog.dismiss();
                     Intent i = new Intent(getApplicationContext(),UserProfileActivity.class);
                     i.putExtra("username",uname);
                     startActivity(i);
                 }
                 else if (response.body().getResponse() != null && response.body().getResponse().equals("error"))
                 {
-                    dialog.dismiss();
-                    prefConfig.displayToast("Wrong Username or Password..!!!");
+                    //dialog.dismiss();
+                    prefConfig.displayToast("Can't Login. Please try again later.");
                 }
             }
 
