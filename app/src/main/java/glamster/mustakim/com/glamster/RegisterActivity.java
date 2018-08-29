@@ -92,12 +92,16 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        if (items[i].equals("Choose From Gallery")) {
+                        if (items[i].equals("Choose From Gallery"))
+                        {
                             Intent intent = new Intent();
                             intent.setType("image/*");
                             intent.setAction(Intent.ACTION_GET_CONTENT);//
                             startActivityForResult(intent, REQUEST_CAMERA);
-                        } else if (items[i].equals("Cancel")) {
+                        }
+
+                        else if (items[i].equals("Cancel"))
+                        {
                             dialogInterface.dismiss();
                         }
 
@@ -111,7 +115,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                performValidation();
+               // performValidation();
+                performRegister();
 
             }
         });
@@ -124,6 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(i);
+                finish();
             }
         });
     }
@@ -153,9 +159,103 @@ public class RegisterActivity extends AppCompatActivity {
         if(name.getText().toString().length() <= 0)
         {
             name.setError("Enter Your Full name");
+            name.requestFocus();
             return;
-        }   else if (user_name.getText().toString().length() <= 0){
+        }
+        else if (user_name.getText().toString().length() <= 0)
+        {
             user_name.setError("Enter Username");
+            user_name.requestFocus();
+            return;
+        }
+        else if (user_email.getText().toString().length() <= 0)
+        {
+            user_email.setError("Enter Email");
+            user_email.requestFocus();
+            return;
+        }
+        else if (user_password.getText().toString().length() <= 0)
+        {
+            user_password.setError("Enter Password");
+            user_password.requestFocus();
+            return;
+        }
+        else if (user_eligibility.getText().toString().length() <= 0)
+        {
+            user_eligibility.setError("Enter Eligibility");
+            user_eligibility.requestFocus();
+            return;
+        }
+        else if (user_age.getText().toString().length() <= 0)
+        {
+            user_age.setError("Enter Age");
+            user_age.requestFocus();
+            return;
+        }
+        else if (user_city.getText().toString().length() <= 0)
+        {
+            user_city.setError("Enter City");
+            user_city.requestFocus();
+            return;
+        }
+        else if (user_height.getText().toString().length() <= 0)
+        {
+            user_height.setError("Enter Height");
+            user_height.requestFocus();
+            return;
+        }
+        else if (user_education.getText().toString().length() <= 0)
+        {
+            user_education.setError("Enter Education");
+            user_education.requestFocus();
+            return;
+        }
+        else if (user_skin_color.getText().toString().length() <= 0)
+        {
+            user_skin_color.setError("Enter Skin Color");
+            user_skin_color.requestFocus();
+            return;
+        }
+        else if (user_eyes_color.getText().toString().length() <= 0)
+        {
+            user_eyes_color.setError("Enter Eye color");
+            user_eyes_color.requestFocus();
+            return;
+        }
+        else if (user_maritial_status.getText().toString().length() <= 0)
+        {
+            user_maritial_status.setError("Enter Maritial Status");
+            user_maritial_status.requestFocus();
+            return;
+        }
+        else if (user_languages.getText().toString().length() <= 0)
+        {
+            user_languages.setError("Enter Language");
+            user_languages.requestFocus();
+            return;
+        }
+        else if (user_training.getText().toString().length() <= 0)
+        {
+            user_training.setError("Enter Training");
+            user_training.requestFocus();
+            return;
+        }
+        else if (user_passport.getText().toString().length() <= 0)
+        {
+            user_passport.setError("Do you have passport?");
+            user_passport.requestFocus();
+            return;
+        }
+        else if (user_figure.getText().toString().length() <= 0)
+        {
+            user_figure.setError("Enter Figure");
+            user_figure.requestFocus();
+            return;
+        }
+        else if (user_biography.getText().toString().length() <= 0)
+        {
+            user_biography.setError("Enter Biography");
+            user_biography.requestFocus();
             return;
         }
         else
@@ -190,13 +290,13 @@ public class RegisterActivity extends AppCompatActivity {
         String selectedGender = (String) radioBtn.getText();
 
         //Image values
-        //image = ImageToString();
+        image = ImageToString();
 
         Log.d("Image", "performRegister: " + image);
 
 
         dialog.show();
-        Call<UserModelCLass> call = apiInterface.performRegistration(fullname, username, email, password, eligibility, age, selectedGender, city, height, education, skin_color, eye_color, maritial_status, languages, training, passport, figure, biography);
+        Call<UserModelCLass> call = apiInterface.performRegistration(fullname, username, email, password, eligibility, age, selectedGender, city, height, education, skin_color, eye_color, maritial_status, languages, training, passport, figure, biography,image);
 
         call.enqueue(new Callback<UserModelCLass>() {
             @Override
@@ -229,11 +329,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-//    private String ImageToString() {
-//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-//        byte[] imgByte = byteArrayOutputStream.toByteArray();
-//        return Base64.encodeToString(imgByte, Base64.DEFAULT);
-//   }
+    private String ImageToString() {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] imgByte = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(imgByte, Base64.DEFAULT);
+   }
 
 }
